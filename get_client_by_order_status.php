@@ -65,20 +65,21 @@ table tr:hover {background-color: #ddd;}
 	width:15%;
 }
 </style>
-<table><th>Order ID</th><th>Datum</th><th>Client e-mail</th><th>Order status</th>
+<table><th>Order ID</th><th>Datum</th><th>Name Client</th><th>Client e-mail</th><th>Order status</th>
 ';
 $billingmail='';
 foreach($results as $r){
 	
 	if($billingmail != $r->billing_email){
-	echo "<tr><td>".$r->order_id."</td><td>".$r->date."</td><td>".$r->billing_email."</td><td>";
+	echo "<tr><td>".$r->order_id."</td><td>".$r->_billing_first_name." ".$r->_billing_last_name."</td><td>".$r->date."</td><td>".$r->billing_email."</td><td>";
 	
 	if($r->post_status == 'wc-refunded'){
 	echo '<span style="color:#333;font-style:italic;">'.$r->post_status.'</span></td></tr>';
 	}else{
 	echo '<span style="color:red;">'.$r->post_status.'</span></td></tr>';
 	}
-		$count++;
+	
+$count++;
 	}
 	$billingmail=$r->billing_email;
 
