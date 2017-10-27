@@ -23,7 +23,8 @@ where
     post_type = 'shop_order' and
        post_status = 'wc-refunded' OR post_status = 'wc-cancelled'
 group by
-    p.ID";
+    p.ID
+	order by billing_email";
 	
 $results = $wpdb->get_results($sql);
 
@@ -66,9 +67,10 @@ table tr:hover {background-color: #ddd;}
 </style>
 <table><th>Order ID</th><th>Datum</th><th>Client e-mail</th><th>Order status</th>
 ';
-
+$billingmail='';
 foreach($results as $r){
 	
+	if($billingmail != $r->billing_email){
 	echo "<tr><td>".$r->order_id."</td><td>".$r->date."</td><td>".$r->billing_email."</td><td>";
 	
 	if($r->post_status == 'wc-refunded'){
@@ -76,6 +78,8 @@ foreach($results as $r){
 	}else{
 	echo '<span style="color:red;">'.$r->post_status.'</span></td></tr>';
 	}
+	}
+	$billingmail=$r->billing_email;
 
 $count++;
 }
