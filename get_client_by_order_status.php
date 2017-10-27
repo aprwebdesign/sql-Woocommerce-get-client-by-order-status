@@ -9,7 +9,7 @@ include_once("wp-includes/wp-db.php");
 
 $sql = "select
     p.ID as order_id,
-    p.post_date,
+    p.post_date as date,
 	p.post_status as post_status,
     max( CASE WHEN pm.meta_key = '_billing_email' and p.ID = pm.post_id THEN pm.meta_value END ) as billing_email,
     max( CASE WHEN pm.meta_key = '_billing_first_name' and p.ID = pm.post_id THEN pm.meta_value END ) as _billing_first_name,
@@ -29,13 +29,59 @@ $results = $wpdb->get_results($sql);
 
 // print_r($results);
 
-foreach($results as $r){
-	echo $r->order_id." - ".$r->billing_email." - ". $r->post_status;
-echo "<br />";	
-$count++;
+echo '<style>
+table {
+   
+    border-collapse: collapse;
+    width: 80%;
 }
 
-echo $count;
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table tr:hover {background-color: #ddd;}
+
+.countbox{
+	position:fixed;
+	right:20px;
+	top:20px;
+	padding:20px;
+	display:block;
+	background:#333;
+	color:#fff;
+	width:15%;
+}
+</style>
+<table><th>Order ID</th><th>Datum</th><th>Client e-mail</th><th>Order status</th>
+';
+
+foreach($results as $r){
+	
+	echo "<tr><td>".$r->order_id."</td><td>".$r->date."</td><td>".$r->billing_email."</td><td>";
+	
+	if($r->post_status == 'wc-refunded'){
+	echo '<span style="color:#333;font-style:italic;">'.$r->post_status.'</span></td></tr>';
+	}else{
+	echo '<span style="color:red;">'.$r->post_status.'</span></td></tr>';
+	}
+
+$count++;
+}
+echo '<table>';
+
+echo '<div class="countbox">Total results<br /><hr>'.$count.'</div>';
     }
 	else{
 ?>
