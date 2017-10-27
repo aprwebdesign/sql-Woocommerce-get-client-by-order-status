@@ -1,3 +1,7 @@
+--
+-- Get woocommerce client details by order status - Currently set for cancelled and refunded orders
+--
+
 select
     p.ID as order_id,
     p.post_date,
