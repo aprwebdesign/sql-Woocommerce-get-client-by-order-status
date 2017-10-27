@@ -1,6 +1,21 @@
 <?php
-$md5pw=""; // set md5 password hash
+$md5pw=""; // set MD5 hash for password
     if (isset($_POST['password']) && md5($_POST['password']) == $md5pw) {
+		?>
+		<!DOCTYPE html>
+<html>
+<head>
+    <title>Password protected</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://cdn.rawgit.com/eligrey/Blob.js/0cef2746414269b16834878a8abc52eb9d53e6bd/Blob.js" /></script>
+  <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js" /></script>
+
+  
+  
+  
+</head>
+<body>
+<?php
 		
 		$count=0;
 		
@@ -65,7 +80,7 @@ table tr:hover {background-color: #ddd;}
 	width:15%;
 }
 </style>
-<table><th>Order ID</th><th>Datum</th><th>Name Client</th><th>Client e-mail</th><th>Order status</th>
+<table><th>Order ID</th><th>Name Client</th><th>Datum</th><th>Client e-mail</th><th>Order status</th>
 ';
 $billingmail='';
 foreach($results as $r){
@@ -87,8 +102,39 @@ $count++;
 }
 echo '<table>';
 
-echo '<div class="countbox">Total results<br /><hr>'.$count.'</div>';
-    }
+echo '<div class="countbox">Total results<br /><hr>'.$count.'<hr><button id="ref">download refund</button><hr>
+  <button id="can">download cancelled</button>';
+
+echo '</div>';
+    
+	?>
+	<script>
+  function totxtref() {
+  var blob = new Blob(["<?php foreach($results as $r){ if($r->post_status == 'wc-refunded'){ echo $r->billing_email.','; }} ?>"], {
+    type: "text/plain;charset=utf-8"
+  });
+  saveAs(blob, "ref.txt");
+}
+
+$("#ref").on("click", function(e) {
+  e.preventDefault();
+  totxtref();
+});
+
+function totxtcan() {
+  var blob = new Blob(["<?php foreach($results as $r){ if($r->post_status == 'wc-cancelled'){ echo $r->billing_email.','; }} ?>"], {
+    type: "text/plain;charset=utf-8"
+  });
+  saveAs(blob, "can.txt");
+}
+
+$("#can").on("click", function(a) {
+  a.preventDefault();
+  totxtcan();
+});
+
+</script><?php
+	}
 	else{
 ?>
 <!DOCTYPE html>
@@ -104,7 +150,10 @@ echo '<div class="countbox">Total results<br /><hr>'.$count.'</div>';
 			<input type="submit" value="login"/>
         </form>
     </div>
-</body>
-</html>
+
 
 	<?php }
+	?>
+	
+	</body>
+</html>
