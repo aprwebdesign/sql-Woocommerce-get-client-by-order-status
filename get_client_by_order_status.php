@@ -78,10 +78,11 @@ foreach($results as $r){
 	}else{
 	echo '<span style="color:red;">'.$r->post_status.'</span></td></tr>';
 	}
+		$count++;
 	}
 	$billingmail=$r->billing_email;
 
-$count++;
+
 }
 echo '<table>';
 
